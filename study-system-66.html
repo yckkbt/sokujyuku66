@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 66 - The History of Chopsticks</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Lato:wght@400;700;900&display=swap');
+  :root{--blue:#1a4fa0;--orange:#e8630a;--green:#1a7a3c;--light-blue:#e8f0fb;--border:#e0e4ea;--bg:#f0f2f5}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:#222}
+  .header{background:var(--blue);color:white;padding:20px 24px 16px}
+  .header-top{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .unit-badge{background:var(--orange);color:white;font-family:'Lato',sans-serif;font-weight:900;font-size:13px;padding:3px 10px;border-radius:20px}
+  .header h1{font-size:17px;font-weight:900}
+  .header-sub{font-size:13px;opacity:.75;margin-top:2px}
+  .header-bar{height:4px;background:var(--orange)}
+  .steps-nav{background:white;border-bottom:1px solid var(--border);display:flex;overflow-x:auto}
+  .step-btn{flex:1;min-width:80px;padding:12px 8px;border:none;background:none;font-family:'Noto Sans JP',sans-serif;font-size:12px;font-weight:700;color:#888;cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;white-space:nowrap}
+  .step-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .step-btn:hover{background:var(--light-blue)}
+  .step-content{display:none;max-width:720px;margin:0 auto;padding:24px 20px 60px}
+  .step-content.active{display:block}
+  .listen-card{background:white;border-radius:12px;border:1px solid var(--border);padding:28px 24px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .listen-icon{font-size:48px;margin-bottom:12px}
+  .listen-title{font-size:18px;font-weight:900;margin-bottom:6px}
+  .listen-sub{font-size:13px;color:#888;margin-bottom:20px}
+  audio{width:100%;margin-top:8px}
+  .para-card{background:white;border-radius:12px;border:1px solid var(--border);padding:24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .para-num{display:inline-block;background:var(--blue);color:white;font-family:'Lato',sans-serif;font-weight:900;font-size:12px;padding:2px 10px;border-radius:20px;margin-bottom:12px}
+  .para-en{font-family:'Lato',sans-serif;font-size:15px;line-height:1.9;margin-bottom:16px;color:#111}
+  .para-en em{font-style:normal;background:#fff3cd;padding:0 2px;border-radius:3px}
+  .para-ja{font-size:13px;line-height:1.9;color:#555;border-top:1px solid var(--border);padding-top:14px}
+  .box{border-radius:8px;padding:14px 16px;margin-top:14px;font-size:13px;line-height:1.8}
+  .vocab-box{background:#f0f7ff;border-left:4px solid var(--blue)}
+  .idiom-box{background:#fff5ee;border-left:4px solid var(--orange)}
+  .grammar-box{background:#f0fff4;border-left:4px solid var(--green)}
+  .box-title{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;opacity:.7}
+  .check-q{background:#fafafa;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-top:14px;font-size:13px}
+  .check-q-label{font-weight:700;color:var(--blue);font-size:12px;margin-bottom:6px}
+  .quiz-card{background:white;border-radius:12px;border:1px solid var(--border);padding:22px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .quiz-q{font-size:15px;font-weight:700;margin-bottom:16px;line-height:1.6}
+  .quiz-opts{display:flex;flex-direction:column;gap:10px}
+  .quiz-opt{padding:12px 16px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;transition:all .15s;text-align:left;background:white;font-family:'Noto Sans JP',sans-serif}
+  .quiz-opt:hover{border-color:var(--blue);background:var(--light-blue)}
+  .quiz-opt.correct{border-color:var(--green);background:#f0fff4;color:var(--green)}
+  .quiz-opt.wrong{border-color:#e53e3e;background:#fff5f5;color:#c53030}
+  .quiz-fb{margin-top:12px;font-size:13px;padding:10px 14px;border-radius:8px;display:none;line-height:1.7}
+  .quiz-fb.show{display:block}
+  .quiz-fb.ok{background:#f0fff4;color:var(--green)}
+  .quiz-fb.ng{background:#fff5f5;color:#c53030}
+  .quiz-score{text-align:center;padding:24px;background:white;border-radius:12px;border:1px solid var(--border);margin-top:20px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .score-num{font-size:48px;font-weight:900;color:var(--blue);font-family:'Lato',sans-serif}
+  .retry-btn{margin-top:16px;padding:12px 32px;background:var(--blue);color:white;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+  .fc-wrap{max-width:400px;margin:0 auto}
+  .fc-card{background:white;border-radius:16px;border:1px solid var(--border);min-height:200px;display:flex;align-items:center;justify-content:center;text-align:center;padding:32px 24px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);transition:transform .1s;user-select:none;margin-bottom:16px}
+  .fc-card:active{transform:scale(.97)}
+  .fc-front{font-family:'Lato',sans-serif;font-size:22px;font-weight:700;color:var(--blue)}
+  .fc-back{display:none}
+  .fc-back-en{font-family:'Lato',sans-serif;font-size:18px;font-weight:700;color:var(--blue);margin-bottom:8px}
+  .fc-back-ja{font-size:15px;color:#555;margin-bottom:12px}
+  .fc-back-ex{font-size:13px;color:#777;font-style:italic;line-height:1.7}
+  .fc-hint{font-size:12px;color:#aaa;margin-bottom:16px;text-align:center}
+  .fc-btns{display:flex;gap:12px;justify-content:center;margin-bottom:24px}
+  .fc-btn{padding:10px 24px;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;font-weight:700;font-family:'Noto Sans JP',sans-serif;background:white;transition:all .15px}
+  .fc-btn.know{border-color:var(--green);color:var(--green)}
+  .fc-btn.know:hover{background:var(--green);color:white}
+  .fc-btn.review{border-color:var(--orange);color:var(--orange)}
+  .fc-btn.review:hover{background:var(--orange);color:white}
+  .fc-progress{font-size:13px;color:#888;text-align:center;margin-bottom:16px}
+  .fc-done{text-align:center;padding:32px 24px;background:white;border-radius:12px;border:1px solid var(--border)}
+  .step-header{font-size:16px;font-weight:900;color:var(--blue);margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--light-blue)}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-top">
+    <span class="unit-badge">Unit 66</span>
+    <h1>The History of Chopsticks</h1>
+  </div>
+  <div class="header-sub">箸の歴史</div>
+</div>
+<div class="header-bar"></div>
+
+<nav class="steps-nav">
+  <button class="step-btn active" onclick="showStep(1)">🎧 Step 1 Listen</button>
+  <button class="step-btn" onclick="showStep(2)">📖 Step 2 Read</button>
+  <button class="step-btn" onclick="showStep(3)">✏️ Step 3 Quiz</button>
+  <button class="step-btn" onclick="showStep(4)">🃏 Step 4 Flashcards</button>
+</nav>
+
+<!-- STEP 1: LISTEN -->
+<div class="step-content active" id="step1">
+  <div class="listen-card">
+    <div class="listen-icon">🎧</div>
+    <div class="listen-title">Unit 66 — The History of Chopsticks</div>
+    <div class="listen-sub">音声を聞いてから、英文を読もう</div>
+    <audio controls src="sokujukure196_eibun66.mp3"></audio>
+  </div>
+</div>
+
+<!-- STEP 2: READ -->
+<div class="step-content" id="step2">
+  <div class="step-header">📖 英文を読む</div>
+
+  <!-- Paragraph 1 -->
+  <div class="para-card">
+    <span class="para-num">Para 1</span>
+    <div class="para-en">
+      Chopsticks are believed to have been used from around 3,000 years ago in China, and were introduced to Japan sometime thereafter, which <em>brought about</em> Japan's chopstick culture. It is likely that chopsticks were originally used as cooking tools, not for eating. They were <em>used to</em> stir and pick up food from hot pots.
+    </div>
+    <div class="para-ja">
+      箸は今から約3,000年前の中国で使われていたと考えられており、その後日本に伝わり、日本の箸文化が生まれた。もともと箸は食事用ではなく、調理道具として使われていた可能性が高い。熱い鍋の中で食べ物をかき混ぜたり取り上げたりするのに使われていたのだ。
+    </div>
+    <div class="box vocab-box">
+      <div class="box-title">📘 Vocabulary</div>
+      <strong>chopsticks</strong>（箸）／ <strong>be believed to do</strong>（〜と考えられている）／ <strong>thereafter</strong>（その後）／ <strong>originally</strong>（もともと）／ <strong>stir</strong>（かき混ぜる）／ <strong>pick up</strong>（つまむ）
+    </div>
+    <div class="box idiom-box">
+      <div class="box-title">🔑 Idiom / Phrase</div>
+      <strong>bring about ~</strong>：〜をもたらす、引き起こす<br>
+      例）The invention brought about a great change.（その発明は大きな変化をもたらした。）<br><br>
+      <strong>used to do</strong>：（以前は）〜したものだった<br>
+      例）We used to go to church every Sunday.（私たちは毎週日曜日に教会に行ったものだった。）
+    </div>
+    <div class="check-q">
+      <div class="check-q-label">🔍 CHECK</div>
+      箸はもともとどんな目的で使われていたか？
+      →食事用ではなく、熱い鍋の中で食べ物をかき混ぜたり取り出したりする調理道具として。
+    </div>
+  </div>
+
+  <!-- Paragraph 2 -->
+  <div class="para-card">
+    <span class="para-num">Para 2</span>
+    <div class="para-en">
+      As eating utensils, chopsticks used to be tools <em>reserved for</em> the upper classes. The custom goes back to the 15th century. Eventually, simple wooden chopsticks that people could <em>dispose of</em> after their meal were developed. Today, Japan uses about 25 billion pairs of disposable chopsticks each year, one third of which come from China.
+    </div>
+    <div class="para-ja">
+      食器として、箸はかつて上流階級のためだけに使われる道具だった。その慣習は15世紀にまでさかのぼる。やがて、食後に捨てることのできるシンプルな木製の箸が作られた。今日、日本では年間約250億膳の使い捨て箸が使われており、その3分の1は中国から輸入されている。
+    </div>
+    <div class="box vocab-box">
+      <div class="box-title">📘 Vocabulary</div>
+      <strong>utensils</strong>（食器、調理器具）／ <strong>upper classes</strong>（上流階級）／ <strong>custom</strong>（慣習）／ <strong>go back to ~</strong>（〜にまでさかのぼる）／ <strong>eventually</strong>（やがて）／ <strong>disposable</strong>（使い捨ての）／ <strong>billion</strong>（10億）
+    </div>
+    <div class="box idiom-box">
+      <div class="box-title">🔑 Idiom / Phrase</div>
+      <strong>reserve A for B</strong>：AをBのためにとっておく・確保する<br>
+      例）This seat is reserved for the elderly.（この席はお年寄りのために確保されています。）<br><br>
+      <strong>dispose of ~</strong>：〜を処分する、捨てる<br>
+      例）They disposed of the problem before anyone found out.（誰かに知られる前に彼らはその問題を処理した。）
+    </div>
+    <div class="check-q">
+      <div class="check-q-label">🔍 CHECK</div>
+      かつて箸は誰のための道具だったか？
+      →上流階級のためのものだった。
+    </div>
+  </div>
+
+  <!-- Paragraph 3 -->
+  <div class="para-card">
+    <span class="para-num">Para 3</span>
+    <div class="para-en">
+      When using chopsticks, one should hold them <em>by</em> the middle, near the top — specifically one third from the top. The lower chopstick stays still, while the upper one moves. Gripping near the tips is considered poor form. In Japan, there are many rules about chopstick etiquette, such as not passing food from chopstick to chopstick, as this <em>is associated with</em> funeral customs.
+    </div>
+    <div class="para-ja">
+      箸を使うとき、上から3分の1あたりの真ん中あたりを持つべきだ。下の箸は固定し、上の箸を動かす。先のほうを持つのは行儀が悪いとされている。日本では箸のマナーに関する多くのルールがある。たとえば、箸から箸へと食べ物を渡してはいけないが、これは葬儀の慣習と結びついているからだ。
+    </div>
+    <div class="box vocab-box">
+      <div class="box-title">📘 Vocabulary</div>
+      <strong>hold A by the B</strong>（AのBの部分を持つ）／ <strong>specifically</strong>（具体的には）／ <strong>grip</strong>（握る、つかむ）／ <strong>tips</strong>（先端）／ <strong>poor form</strong>（不作法）／ <strong>etiquette</strong>（マナー、礼儀作法）／ <strong>funeral</strong>（葬儀）
+    </div>
+    <div class="box idiom-box">
+      <div class="box-title">🔑 Idiom / Phrase</div>
+      <strong>hold A by the B</strong>：AのB（の部分）を持つ<br>
+      例）She took hold of his arm.（彼女は彼の腕をつかんだ。）<br><br>
+      <strong>be associated with ~</strong>：〜と結びついている、関連している<br>
+      例）Rain is often associated with sadness.（雨はしばしば悲しみと結びつけられる。）
+    </div>
+    <div class="check-q">
+      <div class="check-q-label">🔍 CHECK</div>
+      日本で「箸渡し」がタブーとされる理由は？
+      →葬儀の慣習（遺骨を箸で拾う）と関連しているため。
+    </div>
+  </div>
+
+  <!-- Paragraph 4 -->
+  <div class="para-card">
+    <span class="para-num">Para 4</span>
+    <div class="para-en">
+      In recent years, awareness of environmental issues has led to the custom of "my chopsticks" — the practice of people preparing their own reusable chopsticks <em>in advance</em> when eating out, <em>in order to</em> cut down on waste. This custom shows that chopsticks are not just a tool for eating, but <em>may well</em> reflect a culture's values and relationship with nature. The long history of chopsticks <em>goes to show</em> how deeply they are rooted in East Asian life.
+    </div>
+    <div class="para-ja">
+      近年、環境問題への意識の高まりから「マイ箸」という習慣が生まれた。これは外食の際に自分の箸を持参して、ごみを減らすという取り組みだ。この習慣は、箸が単なる食事の道具ではなく、ある文化の価値観や自然との関係を反映しているかもしれないことを示している。箸の長い歴史は、それが東アジアの生活にいかに深く根付いているかを示すものだ。
+    </div>
+    <div class="box vocab-box">
+      <div class="box-title">📘 Vocabulary</div>
+      <strong>awareness</strong>（意識、認識）／ <strong>reusable</strong>（再使用できる）／ <strong>cut down on ~</strong>（〜を減らす）／ <strong>waste</strong>（廃棄物、ごみ）／ <strong>reflect</strong>（反映する）／ <strong>rooted in ~</strong>（〜に根付いた）
+    </div>
+    <div class="box idiom-box">
+      <div class="box-title">🔑 Idiom / Phrase</div>
+      <strong>in advance</strong>：あらかじめ、事前に<br>
+      例）Please prepare in advance.（あらかじめ準備してください。）<br><br>
+      <strong>in order to do</strong>：〜するために<br>
+      例）She studied hard in order to pass the exam.（試験に合格するために彼女は一生懸命勉強した。）<br><br>
+      <strong>may well do</strong>：〜するのも当然だ、〜かもしれない<br>
+      例）You may well say so.（あなたがそう言うのも当然だ。）
+    </div>
+    <div class="box grammar-box">
+      <div class="box-title">📗 Grammar</div>
+      <strong>go to show (that) ~</strong>：〜ということを示す、証明する<br>
+      This goes to show that hard work pays off.（これは努力が報われることを示している。）
+    </div>
+    <div class="check-q">
+      <div class="check-q-label">🔍 CHECK</div>
+      「マイ箸」運動が生まれた背景は？
+      →環境問題への意識が高まり、外食時の使い捨て箸によるごみを減らすため。
+    </div>
+  </div>
+</div>
+
+<!-- STEP 3: QUIZ -->
+<div class="step-content" id="step3">
+  <div class="step-header">✏️ 理解度チェッククイズ</div>
+
+  <div class="quiz-card" id="qcard1">
+    <div class="quiz-q">Q1. Chopsticks are believed to have originated in which country?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'correct',1)">A. China</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',1)">B. Japan</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',1)">C. Korea</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',1)">D. India</button>
+    </div>
+    <div class="quiz-fb" id="fb1">✅ 正解！箸は約3,000年前の中国で使われていたと考えられており、その後日本に伝わりました。</div>
+  </div>
+
+  <div class="quiz-card" id="qcard2">
+    <div class="quiz-q">Q2. What were chopsticks originally used for?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong',2)">A. Serving food at banquets</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',2)">B. Eating rice</button>
+      <button class="quiz-opt" onclick="answer(this,'correct',2)">C. Stirring and picking up food from hot pots</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',2)">D. Measuring ingredients</button>
+    </div>
+    <div class="quiz-fb" id="fb2">✅ 正解！もともと箸は食事用ではなく、熱い鍋の中の食べ物をかき混ぜたり取り出したりする調理道具でした。</div>
+  </div>
+
+  <div class="quiz-card" id="qcard3">
+    <div class="quiz-q">Q3. As eating utensils, chopsticks were originally reserved for whom?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong',3)">A. Children and the elderly</button>
+      <button class="quiz-opt" onclick="answer(this,'correct',3)">B. The upper classes</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',3)">C. Farmers and fishermen</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',3)">D. Buddhist monks</button>
+    </div>
+    <div class="quiz-fb" id="fb3">✅ 正解！食器としての箸はかつて上流階級のためだけのものでした。その慣習は15世紀にまでさかのぼります。</div>
+  </div>
+
+  <div class="quiz-card" id="qcard4">
+    <div class="quiz-q">Q4. Why is it considered bad manners to pass food from chopstick to chopstick in Japan?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong',4)">A. It is unhygienic</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',4)">B. It may cause the food to fall</button>
+      <button class="quiz-opt" onclick="answer(this,'correct',4)">C. It is associated with funeral customs</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',4)">D. It is seen as greedy</button>
+    </div>
+    <div class="quiz-fb" id="fb4">✅ 正解！箸から箸への受け渡しは、葬儀で遺骨を拾う動作に似ているため、タブーとされています。</div>
+  </div>
+
+  <div class="quiz-card" id="qcard5">
+    <div class="quiz-q">Q5. What is the purpose of the "my chopsticks" custom?</div>
+    <div class="quiz-opts">
+      <button class="quiz-opt" onclick="answer(this,'wrong',5)">A. To show off personalized designs</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',5)">B. To eat faster at restaurants</button>
+      <button class="quiz-opt" onclick="answer(this,'correct',5)">C. To reduce waste from disposable chopsticks</button>
+      <button class="quiz-opt" onclick="answer(this,'wrong',5)">D. To follow traditional etiquette rules</button>
+    </div>
+    <div class="quiz-fb" id="fb5">✅ 正解！「マイ箸」は使い捨て箸によるごみを減らすために、自分の箸を持参するという環境に配慮した習慣です。</div>
+  </div>
+
+  <div class="quiz-score" id="quiz-score" style="display:none">
+    <div class="score-num" id="score-num">0/5</div>
+    <div style="margin-top:8px;font-size:15px;color:#555">お疲れ様でした！</div>
+    <button class="retry-btn" onclick="retryQuiz()">もう一度挑戦する</button>
+  </div>
+</div>
+
+<!-- STEP 4: FLASHCARDS -->
+<div class="step-content" id="step4">
+  <div class="step-header">🃏 イディオム・フレーズ フラッシュカード</div>
+  <div class="fc-wrap">
+    <div class="fc-progress" id="fc-progress">1 / 10</div>
+    <div class="fc-hint">タップしてうら面を見る</div>
+    <div class="fc-card" id="fc-card" onclick="flipCard()">
+      <div class="fc-front" id="fc-front"></div>
+      <div class="fc-back" id="fc-back"></div>
+    </div>
+    <div class="fc-btns">
+      <button class="fc-btn review" onclick="markCard(false)">🔁 もう一度</button>
+      <button class="fc-btn know" onclick="markCard(true)">✅ 覚えた！</button>
+    </div>
+    <div class="fc-done" id="fc-done" style="display:none">
+      <div style="font-size:32px;margin-bottom:12px">🎉</div>
+      <div style="font-size:18px;font-weight:900;margin-bottom:8px">全カード完了！</div>
+      <div style="font-size:14px;color:#555;margin-bottom:20px">よく頑張りました！</div>
+      <button class="retry-btn" onclick="shuffleCards()">もう一度やる</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showStep(n){
+  document.querySelectorAll('.step-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.step-btn').forEach(el=>el.classList.remove('active'));
+  document.getElementById('step'+n).classList.add('active');
+  document.querySelectorAll('.step-btn')[n-1].classList.add('active');
+}
+
+let scores={};
+let answered={};
+function answer(btn,type,qn){
+  if(answered[qn])return;
+  answered[qn]=true;
+  const opts=btn.closest('.quiz-opts').querySelectorAll('.quiz-opt');
+  opts.forEach(o=>o.style.pointerEvents='none');
+  btn.classList.add(type);
+  const fb=document.getElementById('fb'+qn);
+  if(type==='correct'){
+    scores[qn]=1;
+    fb.classList.add('ok','show');
+  } else {
+    scores[qn]=0;
+    fb.textContent='❌ 不正解。本文をもう一度確認しよう！';
+    fb.classList.add('ng','show');
+  }
+  if(Object.keys(answered).length===5)showScore();
+}
+function showScore(){
+  const total=Object.values(scores).reduce((a,b)=>a+b,0);
+  document.getElementById('score-num').textContent=total+'/5';
+  document.getElementById('quiz-score').style.display='block';
+}
+function retryQuiz(){
+  scores={};answered={};
+  document.querySelectorAll('.quiz-opt').forEach(o=>{
+    o.classList.remove('correct','wrong');
+    o.style.pointerEvents='';
+  });
+  document.querySelectorAll('.quiz-fb').forEach(f=>{
+    f.classList.remove('show','ok','ng');
+    const qn=f.id.replace('fb','');
+    if(qn==='1')f.textContent='✅ 正解！箸は約3,000年前の中国で使われていたと考えられており、その後日本に伝わりました。';
+    if(qn==='2')f.textContent='✅ 正解！もともと箸は食事用ではなく、熱い鍋の中の食べ物をかき混ぜたり取り出したりする調理道具でした。';
+    if(qn==='3')f.textContent='✅ 正解！食器としての箸はかつて上流階級のためだけのものでした。その慣習は15世紀にまでさかのぼります。';
+    if(qn==='4')f.textContent='✅ 正解！箸から箸への受け渡しは、葬儀で遺骨を拾う動作に似ているため、タブーとされています。';
+    if(qn==='5')f.textContent='✅ 正解！「マイ箸」は使い捨て箸によるごみを減らすために、自分の箸を持参するという環境に配慮した習慣です。';
+  });
+  document.getElementById('quiz-score').style.display='none';
+}
+
+const cards=[
+  {front:'bring about ~',back:'bring about ~',ja:'〜をもたらす、引き起こす',ex:'The invention brought about a great change.\n（その発明は大きな変化をもたらした。）'},
+  {front:'used to do',back:'used to do',ja:'（以前は）〜したものだった',ex:'We used to go to church every Sunday.\n（毎週日曜日に教会に行ったものだった。）'},
+  {front:'reserve A for B',back:'reserve A for B',ja:'AをBのためにとっておく',ex:'This seat is reserved for the elderly.\n（この席はお年寄りのために確保されています。）'},
+  {front:'dispose of ~',back:'dispose of ~',ja:'〜を処分する、捨てる',ex:'They disposed of the problem.\n（彼らはその問題を処理した。）'},
+  {front:'go back to ~',back:'go back to ~',ja:'〜にまでさかのぼる',ex:'The custom goes back to the 15th century.\n（その慣習は15世紀にさかのぼる。）'},
+  {front:'hold A by the B',back:'hold A by the B',ja:'AのBの部分を持つ',ex:'She took hold of his arm.\n（彼女は彼の腕をつかんだ。）'},
+  {front:'be associated with ~',back:'be associated with ~',ja:'〜と結びついている',ex:'Rain is often associated with sadness.\n（雨はしばしば悲しみと結びつけられる。）'},
+  {front:'in advance',back:'in advance',ja:'あらかじめ、事前に',ex:'Please prepare in advance.\n（あらかじめ準備してください。）'},
+  {front:'may well do',back:'may well do',ja:'〜するのも当然だ／〜かもしれない',ex:'You may well say so.\n（あなたがそう言うのも当然だ。）'},
+  {front:'cut down on ~',back:'cut down on ~',ja:'〜を減らす、削減する',ex:'We should cut down on waste.\n（私たちはごみを減らすべきだ。）'},
+];
+
+let deck=[...cards];
+let ci=0;
+let flipped=false;
+
+function shuffleCards(){
+  deck=[...cards].sort(()=>Math.random()-.5);
+  ci=0;flipped=false;
+  document.getElementById('fc-done').style.display='none';
+  document.getElementById('fc-card').style.display='flex';
+  document.querySelector('.fc-btns').style.display='flex';
+  document.querySelector('.fc-hint').style.display='block';
+  renderCard();
+}
+
+function renderCard(){
+  if(ci>=deck.length){
+    document.getElementById('fc-card').style.display='none';
+    document.querySelector('.fc-btns').style.display='none';
+    document.querySelector('.fc-hint').style.display='none';
+    document.getElementById('fc-done').style.display='block';
+    return;
+  }
+  const c=deck[ci];
+  flipped=false;
+  document.getElementById('fc-front').textContent=c.front;
+  document.getElementById('fc-front').style.display='block';
+  const back=document.getElementById('fc-back');
+  back.innerHTML=`<div class="fc-back-en">${c.back}</div><div class="fc-back-ja">${c.ja}</div><div class="fc-back-ex">${c.ex.replace(/\n/g,'<br>')}</div>`;
+  back.style.display='none';
+  document.getElementById('fc-progress').textContent=(ci+1)+' / '+deck.length;
+}
+
+function flipCard(){
+  flipped=!flipped;
+  document.getElementById('fc-front').style.display=flipped?'none':'block';
+  document.getElementById('fc-back').style.display=flipped?'block':'none';
+}
+
+function markCard(known){
+  if(!flipped)flipCard();
+  setTimeout(()=>{
+    if(!known)deck.push(deck[ci]);
+    ci++;
+    renderCard();
+  },300);
+}
+
+shuffleCards();
+</script>
+</body>
+</html>
